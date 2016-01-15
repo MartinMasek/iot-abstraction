@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuntius", "Nuntius\Nuntius.csproj", "{B5368EB1-708C-47BA-A681-62EB7F2AB68B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuntius.Tests", "Nuntius.Tests\Nuntius.Tests.csproj", "{16AC1BE3-045C-425E-AA65-B86853400550}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestNuntius", "TestNuntius\TestNuntius.csproj", "{6F7AF0C8-1EA3-4281-A8EE-C138D7D0F952}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B5368EB1-708C-47BA-A681-62EB7F2AB68B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5368EB1-708C-47BA-A681-62EB7F2AB68B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5368EB1-708C-47BA-A681-62EB7F2AB68B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5368EB1-708C-47BA-A681-62EB7F2AB68B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16AC1BE3-045C-425E-AA65-B86853400550}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16AC1BE3-045C-425E-AA65-B86853400550}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16AC1BE3-045C-425E-AA65-B86853400550}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16AC1BE3-045C-425E-AA65-B86853400550}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F7AF0C8-1EA3-4281-A8EE-C138D7D0F952}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F7AF0C8-1EA3-4281-A8EE-C138D7D0F952}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F7AF0C8-1EA3-4281-A8EE-C138D7D0F952}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F7AF0C8-1EA3-4281-A8EE-C138D7D0F952}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
