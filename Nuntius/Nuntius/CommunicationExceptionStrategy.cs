@@ -12,12 +12,12 @@ namespace Nuntius
     public enum CommunicationExceptionStrategy
     {
         /// <summary>
-        /// Indicates that the source which caught the exception should continue in its flow.
+        /// Indicates that the source which caught the exception should continue in its flow when receiving next message.
         /// </summary>
         ContinueFlow,
         /// <summary>
-        /// Indicates that the source which caught the exception should stop its flow and signal end event and
-        /// not send any more messages.
+        /// Indicates that the source which caught the exception should stop its flow and signal <see cref="IEventSource.End"/> 
+        /// event and not send any more messages (though it can receive messages).
         /// </summary>
         StopFlow
     }

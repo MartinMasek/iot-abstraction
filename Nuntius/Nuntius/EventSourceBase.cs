@@ -9,7 +9,7 @@ namespace Nuntius
     /// This class provides helper methods for <see cref="IEventSource"/> interface. This class enables safe invocations
     /// of <see cref="IEventSource.Send"/> and <see cref="IEventSource.End"/> events with automatic exception handling.
     /// </summary>
-    public abstract class EventSourceBase : IEventSource
+    public class EventSourceBase : IEventSource
     {
         protected readonly EventSourceCallbackMonitoringOptions MonitoringOption;
 
@@ -67,7 +67,6 @@ namespace Nuntius
                                             throw new NotImplementedException($"Strategy for {NuntiusConfiguration.CommunicationExceptionStrategy} was not implemented.");
                                     }
                                 }, TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously);
-                                d(message);
                             }
                         }
                         break;
