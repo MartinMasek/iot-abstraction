@@ -16,7 +16,7 @@ namespace TestNuntius
         {
             var hash = new HashFilter(HashType.Sha256, "Data");
             var trim = new TrimMessageFilter("Trim");
-            var d = new TestDevice();
+            var d = new TestDeviceSourceEndpoint();
             d.LinkTo(hash).LinkTo(trim).LinkTo(m =>
             {
                 return Task.Factory.StartNew(() =>
@@ -24,9 +24,23 @@ namespace TestNuntius
                     Console.WriteLine(m);
                 });
             });
-            d.Initialize();
+            Task.Factory.StartNew(() =>
+            {
+                int i = 0;
+                while (true)
+                {
+                    d.SendMessage(new NuntiusMessage()
+                    {
+                        ["Data"] = i.ToString(),
+                        ["Original"] = i.ToString(),
+                        ["Trim"] = (i*i).ToString()
+                    });
+                    i++;
+                    Task.Delay(100).Wait();
+                }
+            });
             Console.ReadLine();
-            d.EndDevice();
+            d.EndSending();
             Console.ReadLine();
         }
     }

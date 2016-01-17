@@ -40,10 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseDeviceSourceEndpoint.cs" />
     <Compile Include="CommunicationExceptionStrategy.cs" />
     <Compile Include="EventSourceCallbackMonitoringOptions.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="IDevice.cs" />
+    <Compile Include="IDeviceSourceEndpoint.cs" />
     <Compile Include="IEventSource.cs" />
     <Compile Include="IEventTarget.cs" />
     <Compile Include="IEventPropagator.cs" />

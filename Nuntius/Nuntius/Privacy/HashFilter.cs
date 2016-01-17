@@ -30,7 +30,7 @@ namespace Nuntius.Privacy
         /// <summary>
         /// Creates a new hash filter which does not check for exceptions in tasks returned by <see cref="Send"/> callbacks.
         /// </summary>
-        /// <param name="hashType">Hash funciton to use.</param>
+        /// <param name="hashType">Hash function to use.</param>
         /// <param name="keysToHash">Message keys whose values will be hashed and saved under the key.</param>
         public HashFilter(HashType hashType, params string[] keysToHash) : this(hashType, EventSourceCallbackMonitoringOptions.NotCheckTaskException, keysToHash)
         {
@@ -39,7 +39,7 @@ namespace Nuntius.Privacy
         /// <summary>
         /// Creates a new hash filter.
         /// </summary>
-        /// <param name="hashType">Hash funciton to use.</param>
+        /// <param name="hashType">Hash function to use.</param>
         /// <param name="monitoringOption">How to behave when invoking <see cref="Send"/> callbacks.</param>
         /// <param name="keysToHash">Message keys whose values will be hashed and saved under the key.</param>
         public HashFilter(HashType hashType, EventSourceCallbackMonitoringOptions monitoringOption, params string[] keysToHash)

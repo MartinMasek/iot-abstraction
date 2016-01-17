@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nuntius;
 
-namespace Nuntius
+namespace TestNuntius
 {
-    public interface IDevice : IEventSource
+    public class TestDeviceSourceEndpoint : BaseDeviceSourceEndpoint
     {
     }
 }
