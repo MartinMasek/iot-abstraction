@@ -55,6 +55,8 @@
     <Compile Include="EventSourceBase.cs" />
     <Compile Include="Privacy\DelayFilter.cs" />
     <Compile Include="Privacy\HashFilter.cs" />
+    <Compile Include="Privacy\IKAnonymitySet.cs" />
+    <Compile Include="Privacy\KAnonymityFilter.cs" />
     <Compile Include="Privacy\TrimMessageFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
