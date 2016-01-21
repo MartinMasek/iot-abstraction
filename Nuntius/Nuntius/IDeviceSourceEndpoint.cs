@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Nuntius
+﻿namespace Nuntius
 {
     /// <summary>
     /// Represents a device endpoint which can be used as a start for flow in Nuntius framework. Devices generate

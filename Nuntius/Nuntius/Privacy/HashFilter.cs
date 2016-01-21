@@ -63,18 +63,19 @@ namespace Nuntius.Privacy
         /// <returns>Task which represents message processing.</returns>
         public Task ProcessMessage(NuntiusMessage message)
         {
+            foreach (var key in _keysToHash)
+            {
+                var value = message[key];
+                if (value == null)
+                {
+                    throw new KeyNotFoundException($"Key {key} was not present in the message.");
+                }
+                var hash = _hashProvider.ComputeHash(Encoding.UTF8.GetBytes(value));
+                message[key] = GetHexaString(hash);
+            }
             return Task.Factory.StartNew(() =>
             {
-                foreach (var key in _keysToHash)
-                {
-                    var value = message[key];
-                    if (value == null)
-                    {
-                        throw new KeyNotFoundException($"Key {key} was not present in the message.");
-                    }
-                    var hash = _hashProvider.ComputeHash(Encoding.UTF8.GetBytes(value));
-                    message[key] = GetHexaString(hash);
-                }
+                
                 SafelyInvokeSendEvent(message);
             });
         }

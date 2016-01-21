@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Nuntius
+﻿namespace Nuntius
 {
     /// <summary>
     /// Represents base implementation of <see cref="IDeviceSourceEndpoint"/>

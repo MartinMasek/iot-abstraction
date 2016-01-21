@@ -20,6 +20,11 @@ namespace Nuntius
         }
 
         /// <summary>
+        /// Represents properties of the message. Properties are used to save message information.
+        /// </summary>
+        public IDictionary<string, string> Properties => _properties;
+
+        /// <summary>
         /// Adds key value pair to the message.
         /// </summary>
         /// <param name="key">Key for the value. Must not be null or empty.</param>
@@ -48,11 +53,6 @@ namespace Nuntius
         }
 
         /// <summary>
-        /// Id of the message.
-        /// </summary>
-        public string MessageId { get; set; }
-
-        /// <summary>
         /// Removes a property of the given key. If the property is not present returns false.
         /// </summary>
         /// <param name="propertyName">Key of the property to remove.</param>
@@ -70,9 +70,6 @@ namespace Nuntius
         public override string ToString()
         {
             var builder = new StringBuilder();
-            builder.Append("MessageId: ");
-            builder.Append(MessageId);
-            builder.Append("  ");
             foreach (var keyPair in _properties)
             {
                 builder.Append("[");
