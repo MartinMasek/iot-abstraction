@@ -24,15 +24,15 @@ namespace TestNuntius
                 Console.WriteLine(m.InnerExceptions[0]);
             };
             var d2c = new DeviceToCloudEndpoint("myId","iotprivacy.azure-devices.net", "MSmK/ZpH6sHsLPd/sS9czefw+OQulerhBCXGN90Pw9g=", "myFirstDevice");
-            d.LinkTo(hash).LinkTo(trim)
-                .LinkTo(d2c);
-            //    .LinkTo(m =>
-            //{
-            //    return Task.Factory.StartNew(() =>
-            //    {
-            //        Console.WriteLine(m);
-            //    });
-            //});
+            d.LinkTo(hash).LinkTo(trim).LinkTo(new DelayFilter(3000))
+                //.LinkTo(d2c);
+                .LinkTo(m =>
+            {
+                return Task.Factory.StartNew(() =>
+                {
+                    Console.WriteLine(m);
+                });
+            });
             Task.Factory.StartNew(() =>
             {
                 int i = 0;

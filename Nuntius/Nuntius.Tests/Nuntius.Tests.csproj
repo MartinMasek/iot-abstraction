@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="EventSourceBaseTests.cs" />
     <Compile Include="NuntiusConfigurationTests.cs" />
+    <Compile Include="Privacy\DelayFilterTest.cs" />
     <Compile Include="Privacy\HashFilterTests.cs" />
     <Compile Include="Privacy\TrimMessageFilterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
