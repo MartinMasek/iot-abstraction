@@ -28,7 +28,7 @@ namespace TestNuntius
                 //.LinkTo(new DelayFilter(3000))
                 .LinkTo(new KAnonymityFilter<object>(new CountAnonymitySet[]
                 {
-                  new CountAnonymitySet(0,3,4000),
+                  new CountAnonymitySet(0,3,4500),
                   new CountAnonymitySet(1,3,4500),
                 }, m => m["Original"], o => Int32.Parse((string)o) % 2))
 

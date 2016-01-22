@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Nuntius
 {
@@ -65,6 +63,20 @@ namespace Nuntius
         private void ValidateKey(string key)
         {
             if (String.IsNullOrEmpty(key)) throw new ArgumentException($"{nameof(key)} must not be null and at least 1 character long.");
+        }
+
+        /// <summary>
+        /// Returns a clone of this object.
+        /// </summary>
+        /// <returns></returns>
+        public NuntiusMessage Clone()
+        {
+            var clone = new NuntiusMessage();
+            foreach (var pair in Properties)
+            {
+                clone[pair.Key] = pair.Value;
+            }
+            return clone;
         }
 
         public override string ToString()
