@@ -51,10 +51,12 @@ namespace Nuntius.Privacy
         public bool AddToSet(object element)
         {
             var occurences = Interlocked.Add(ref _occurences, 1);
+            Console.WriteLine($"{Id} - {occurences}");
             Task.Factory.StartNew(async () =>
             {
                 await Task.Delay(_lifespanInMilliseconds);
                 Interlocked.Add(ref _occurences, -1);
+                Console.WriteLine($"deleted from {Id}");
             });
             return occurences >= _k;
         }
