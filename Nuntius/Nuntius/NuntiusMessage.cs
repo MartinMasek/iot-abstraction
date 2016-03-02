@@ -5,7 +5,7 @@ using System.Text;
 namespace Nuntius
 {
     /// <summary>
-    /// Represents a message used by Nuntius library.
+    /// Represents a message used by Nuntius library. TODO: thread safety?
     /// </summary>
     public sealed class NuntiusMessage
     {
@@ -60,13 +60,19 @@ namespace Nuntius
             return _properties.Remove(propertyName);
         }
 
+        /// <summary>
+        /// Binary body of the message.
+        /// </summary>
+        public byte[] Body { get; set; }
+
         private void ValidateKey(string key)
         {
             if (String.IsNullOrEmpty(key)) throw new ArgumentException($"{nameof(key)} must not be null and at least 1 character long.");
         }
 
         /// <summary>
-        /// Returns a clone of this object.
+        /// Returns a clone of this object. All properties are copied but the binary body. In that case, 
+        /// only the references only exchanged.
         /// </summary>
         /// <returns></returns>
         public NuntiusMessage Clone()
@@ -76,6 +82,7 @@ namespace Nuntius
             {
                 clone[pair.Key] = pair.Value;
             }
+            clone.Body = Body;
             return clone;
         }
 

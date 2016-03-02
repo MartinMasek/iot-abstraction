@@ -63,6 +63,7 @@ namespace Nuntius.Privacy
         /// <returns>Task which represents message processing.</returns>
         public Task ProcessMessage(NuntiusMessage message)
         {
+            // TODO move to task and create tests
             foreach (var key in _keysToHash)
             {
                 var value = message[key];
@@ -75,7 +76,6 @@ namespace Nuntius.Privacy
             }
             return Task.Factory.StartNew(() =>
             {
-                
                 SafelyInvokeSendEvent(message);
             });
         }

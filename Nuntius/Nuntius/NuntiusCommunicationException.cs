@@ -54,17 +54,17 @@ namespace Nuntius
     {
         /// <summary>
         /// Exception has been thrown when <see cref="IEventSource"/> fired its <see cref="IEventSource.Send"/> event and
-        /// the exception was thrown inside callee handle method.
+        /// the exception was thrown inside the callee handle method.
         /// </summary>
         ProcessHandler,
         /// <summary>
-        /// Exception has been thrown when waiting for result of task returned by <see cref="IEventSource.Send"/> 
+        /// Exception has been thrown when waiting for result of the task returned by <see cref="IEventSource.Send"/> 
         /// method.
         /// </summary>
         ProcessTask,
         /// <summary>
         /// Exception has been thrown when <see cref="IEventSource"/> fired its <see cref="IEventSource.End"/> event and the
-        /// exception was thrown inside callee handle method.
+        /// exception was thrown inside the callee handle method.
         /// method.
         /// </summary>
         EndHandler

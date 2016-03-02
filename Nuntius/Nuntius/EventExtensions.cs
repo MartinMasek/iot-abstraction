@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Nuntius
 {
-    public static class Extensions
+    public static class EventExtensions
     {
         public static IEventPropagator LinkTo(this IEventPropagator source, IEventPropagator target)
         {

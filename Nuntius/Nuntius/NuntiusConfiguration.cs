@@ -21,12 +21,12 @@ namespace Nuntius
         }
 
         /// <summary>
-        /// Event raised when an exception is thrown during message sending in Nuntius framework. 
+        /// Event raised when an exception is thrown during a message sending in Nuntius framework. 
         /// </summary>
         public static event Action<NuntiusCommunicationException> Exception;
 
         /// <summary>
-        /// Communication strategy when exception happens in message flow. Default value is <see cref="CommunicationExceptionStrategy.ContinueFlow"/>.
+        /// Communication strategy when exception happens in a message flow. Default value is <see cref="CommunicationExceptionStrategy.ContinueFlow"/>.
         /// </summary>
         public static CommunicationExceptionStrategy CommunicationExceptionStrategy { get; set; } = CommunicationExceptionStrategy.ContinueFlow;
     }
