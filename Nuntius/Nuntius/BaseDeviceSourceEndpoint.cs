@@ -14,5 +14,13 @@
         {
             SafelyInvokeEndEvent();
         }
+        
+        /// <summary>
+        /// Safely invokes <see cref="EndSending"/> method.
+        /// </summary>
+        public void Dispose()
+        {
+            EndSending();
+        }
     }
 }

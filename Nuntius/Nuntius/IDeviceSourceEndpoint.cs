@@ -1,10 +1,12 @@
-﻿namespace Nuntius
+﻿using System;
+
+namespace Nuntius
 {
     /// <summary>
     /// Represents a device endpoint which can be used as a start for flow in Nuntius framework. Devices generate
     /// messages which can be transformed by other components and passed further.
     /// </summary>
-    public interface IDeviceSourceEndpoint : IEventSource
+    public interface IDeviceSourceEndpoint : IEventSource, IDisposable
     {
         /// <summary>
         /// Sends a new message. 

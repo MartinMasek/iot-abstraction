@@ -100,6 +100,7 @@ namespace Nuntius
             try
             {
                 await Task.Factory.StartNew(() => End?.Invoke());
+                End = null;
             }
             catch (Exception e)
             {
