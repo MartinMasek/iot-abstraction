@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Nuntius.Logging
 {
-    class FileLogger : EventSourceBase, ILogger, IDisposable, IEventPropagator
+    public class FileLogger : EventSourceBase, ILogger, IDisposable, IEventPropagator
     {
         private readonly Func<NuntiusMessage, string> _messageToString;
         private StreamWriter writer;
