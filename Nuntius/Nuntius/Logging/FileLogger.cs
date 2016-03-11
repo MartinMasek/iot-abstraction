@@ -9,7 +9,7 @@ namespace Nuntius.Logging
 {
     public class FileLogger : EventSourceBase, ILogger, IDisposable, IEventPropagator
     {
-        private readonly Func<NuntiusMessage, string> _messageToString;
+        private readonly Func<NuntiusMessage, string> _messageToString = m => m.ToString();
         private StreamWriter writer;
 
         public FileLogger(string filePath) : this(filePath, false)
@@ -29,7 +29,8 @@ namespace Nuntius.Logging
         public void Log(NuntiusMessage message)
         {
             writer.WriteLine(DateTime.Now.ToString("HH:mm:ss"));
-            writer.WriteAsync($"Message: {_messageToString?.Invoke(message) ?? message.ToString()} {Environment.NewLine}").Wait();
+            writer.WriteLine($"Message: {_messageToString(message)} {Environment.NewLine}");
+            Console.WriteLine($"Message: {_messageToString(message)} {Environment.NewLine}");
         }
 
         /// <summary>
@@ -60,6 +61,7 @@ namespace Nuntius.Logging
         public void EndProcessing()
         {
             writer.Dispose();
+            Console.WriteLine("DISPOSED");
             SafelyInvokeEndEvent();
         }
     }
