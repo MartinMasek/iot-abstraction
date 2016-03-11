@@ -15,12 +15,13 @@ namespace Playground
         static void Main(string[] args)
         {
             var d = new BaseDeviceSourceEndpoint();
-            d.LinkTo(new TrimMessageFilter("Trim")).LinkTo(new FileLogger(@"C:\Users\ape1eat\Desktop\Log_2.txt",true));
+            d.LinkTo(new TrimMessageFilter("Trim")).LogToFile(@"C:\Users\ape1eat\Desktop\Foo\Log_2.txt", true);
             d.SendMessage(new NuntiusMessage()
             {
                 Properties =
                     {
                         {"Id", "1"},
+                        {"Name", "crews"},
                         {"Trim", "TT"}
                     }
             });
@@ -43,7 +44,6 @@ namespace Playground
                     }
             });
             d.EndSending();
-            Thread.Sleep(1000);
         }
     }
 }

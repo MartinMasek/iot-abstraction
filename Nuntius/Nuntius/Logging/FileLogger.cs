@@ -7,20 +7,46 @@ using System.Threading.Tasks;
 
 namespace Nuntius.Logging
 {
+    /// <summary>
+    /// A class logging incoming messages to a file.
+    /// </summary>
     public class FileLogger : EventSourceBase, ILogger, IDisposable, IEventPropagator
     {
-        private readonly Func<NuntiusMessage, string> _messageToString = m => m.ToString();
-        private StreamWriter writer;
+        private readonly Func<NuntiusMessage, string> _messageToString;
+        private readonly StreamWriter _writer;
 
+        /// <summary>
+        /// Creates a new instance.
+        /// </summary>
+        /// <param name="filePath">Path of file to which the incoming messages should be outputted. If the file
+        /// does not exist, it is created.</param>
         public FileLogger(string filePath) : this(filePath, false)
         {
         }
 
+        /// <summary>
+        /// Creates a new instance.
+        /// </summary>
+        /// <param name="filePath">Path of file to which the incoming messages should be outputted. If the file
+        /// does not exist, it is created.</param>
+        /// <param name="append">True if the new content should be appended.</param>
         public FileLogger(string filePath, bool append)
         {
-            writer = new StreamWriter(filePath, append);
+            if (filePath == null) throw new ArgumentNullException($"{nameof(filePath)} must not be null.");
+            if (!Directory.Exists(Path.GetDirectoryName(filePath)))
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+            _writer = new StreamWriter(filePath, append);
+            _messageToString = message =>
+                    $"{DateTime.Now.ToString("HH:mm:ss")}{Environment.NewLine}Message: {message}{Environment.NewLine}";
         }
 
+        /// <summary>
+        /// Creates a new instance.
+        /// </summary>
+        /// <param name="filePath">Path of file to which the incoming messages should be outputted. If the file
+        /// does not exist, it is created.</param>
+        /// <param name="append">True if the new content should be appended.</param>
+        /// <param name="messageToString">Function converting a message to a string which is then logged.</param>
         public FileLogger(string filePath, bool append, Func<NuntiusMessage, string> messageToString) : this(filePath, append)
         {
             _messageToString = messageToString;
@@ -28,9 +54,15 @@ namespace Nuntius.Logging
 
         public void Log(NuntiusMessage message)
         {
-            writer.WriteLine(DateTime.Now.ToString("HH:mm:ss"));
-            writer.WriteLine($"Message: {_messageToString(message)} {Environment.NewLine}");
-            Console.WriteLine($"Message: {_messageToString(message)} {Environment.NewLine}");
+            _writer.WriteLine(_messageToString(message));
+        }
+
+        /// <summary>
+        /// Method called when no more logging should be done.
+        /// </summary>
+        public void EndLogging()
+        {
+            EndProcessing();
         }
 
         /// <summary>
@@ -38,7 +70,7 @@ namespace Nuntius.Logging
         /// </summary>
         public void Dispose()
         {
-            writer.Dispose();
+            _writer.Dispose();
         }
 
         /// <summary>
@@ -60,8 +92,7 @@ namespace Nuntius.Logging
         /// </summary>
         public void EndProcessing()
         {
-            writer.Dispose();
-            Console.WriteLine("DISPOSED");
+            _writer.Dispose();
             SafelyInvokeEndEvent();
         }
     }

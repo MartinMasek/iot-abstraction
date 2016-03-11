@@ -95,11 +95,11 @@ namespace Nuntius
         /// <summary>
         /// Safely invokes <see cref="End"/> event and handles and properly distributes any exception thrown in the process.
         /// </summary>
-        protected async void SafelyInvokeEndEvent()
+        protected void SafelyInvokeEndEvent()
         {
             try
             {
-                await Task.Factory.StartNew(() => End?.Invoke());
+                End?.Invoke();
                 End = null;
             }
             catch (Exception e)
