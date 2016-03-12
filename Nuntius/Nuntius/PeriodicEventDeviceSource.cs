@@ -10,7 +10,7 @@ namespace Nuntius
     /// Represents base implementation of <see cref="IDeviceSourceEndpoint"/> which periodically sends
     /// a message.
     /// </summary>
-    class PeriodicEventDeviceSource : BaseDeviceSourceEndpoint
+    public class PeriodicEventDeviceSource : BaseDeviceSourceEndpoint
     {
         private readonly int _intervalInMiliseconds;
 
