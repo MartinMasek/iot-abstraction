@@ -15,6 +15,22 @@ namespace Nuntius
         private readonly int _intervalInMiliseconds;
 
         /// <summary>
+        /// Starts a task which periodically sends messages.
+        /// </summary>
+        /// <returns></returns>
+        public Task StartSending()
+        {
+            return Task.Factory.StartNew(async () =>
+            {
+                while (ShouldSendMessages)
+                {
+                    await Task.Delay(_intervalInMiliseconds);
+                    SendMessage(GetNextMessage());
+                }
+            });
+        }
+
+        /// <summary>
         /// Creates a new instance.
         /// </summary>
         /// <param name="intervalInMiliseconds">This is an interval in milliseconds before sending a message again. 
@@ -24,11 +40,6 @@ namespace Nuntius
             if (intervalInMiliseconds < 10)
                 throw new ArgumentException($"{nameof(intervalInMiliseconds)} must be greater or equal 10.");
             _intervalInMiliseconds = intervalInMiliseconds;
-            Task.Factory.StartNew(async () =>
-            {
-                await Task.Delay(_intervalInMiliseconds);
-                SendMessage(GetNextMessage());
-            });
         }
 
         /// <summary>
@@ -36,5 +47,10 @@ namespace Nuntius
         /// </summary>
         /// <returns></returns>
         protected abstract NuntiusMessage GetNextMessage();
+
+        /// <summary>
+        /// Indicates whether the messages should be send. Once it is false the messages stop being sent.
+        /// </summary>
+        protected abstract bool ShouldSendMessages { get; }
     }
 }
