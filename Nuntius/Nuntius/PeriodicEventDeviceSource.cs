@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nuntius
@@ -16,7 +17,8 @@ namespace Nuntius
         /// <summary>
         /// Indicates whether the messages should be send. Once it is false the messages stop being sent.
         /// </summary>
-        protected bool ShouldSendMessages = true;
+        private bool _shouldSendMessages = true;
+        private object _shouldSendMessagesLock = new object();
 
         /// <summary>
         /// Starts a task which periodically sends messages.
@@ -26,10 +28,13 @@ namespace Nuntius
         {
             return Task.Factory.StartNew(async () =>
             {
-                while (ShouldSendMessages)
+                while (_shouldSendMessages)
                 {
                     await Task.Delay(_intervalInMiliseconds);
-                    SendMessage(GetNextMessage());
+                    lock (_shouldSendMessagesLock)
+                    {
+                        SendMessage(GetNextMessage());
+                    }
                 }
             });
         }
@@ -54,7 +59,10 @@ namespace Nuntius
 
         public override void EndSending()
         {
-            ShouldSendMessages = false;
+            lock (_shouldSendMessagesLock)
+            {
+                _shouldSendMessages = false;
+            }
             base.EndSending();
         }
     }
