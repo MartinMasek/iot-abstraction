@@ -21,7 +21,7 @@ namespace Nuntius.Privacy
         private readonly TResult _initialValue;
         private TResult _actualAccumulatedValue;
         private readonly Func<TResult, NuntiusMessage> _resultToMessageMapping;
-        private readonly int _intervalInSeconds;
+        private readonly int _intervalInMilliseconds;
         private readonly object _lock = new object();
         private bool _messageInIntervalReceived;
         private CancellationTokenSource _sendTaskToken = new CancellationTokenSource();
@@ -33,7 +33,7 @@ namespace Nuntius.Privacy
         /// so far accumulated result from previous messages in the given time interval.</param>
         /// <param name="initialValue">Initial value passed to the first arrived message.</param>
         /// <param name="resultToMessageMapping">Mapping function from the result to the output message.</param>
-        /// <param name="intervalInSeconds">Interval in seconds. Must be at least 1.</param>
+        /// <param name="intervalInSeconds">Interval in milliseconds. Must be at least 100.</param>
         public IntervalAggregateFilter(Func<NuntiusMessage, TResult, TResult> aggregateFunction,
             TResult initialValue, Func<TResult, NuntiusMessage> resultToMessageMapping, int intervalInSeconds)
             : this(aggregateFunction, initialValue, resultToMessageMapping, EventSourceCallbackMonitoringOptions.NotCheckTaskException, intervalInSeconds)
@@ -47,23 +47,23 @@ namespace Nuntius.Privacy
         /// <param name="initialValue">Initial value passed to the first arrived message.</param>
         /// <param name="resultToMessageMapping">Mapping function from the result to the output message.</param>
         /// <param name="options">How to behave when invoking <see cref="EventSourceBase.Send"/> callbacks.</param>
-        /// <param name="intervalInSeconds">Interval in seconds. Must be at least 1.</param>
+        /// <param name="intervalInMilliseconds">Interval in milliseconds. Must be at least 100.</param>
         public IntervalAggregateFilter(Func<NuntiusMessage, TResult, TResult> aggregateFunction,
             TResult initialValue, Func<TResult, NuntiusMessage> resultToMessageMapping, EventSourceCallbackMonitoringOptions options,
-            int intervalInSeconds)
+            int intervalInMilliseconds)
             : base(options)
         {
-            if (intervalInSeconds < 1) throw new ArgumentException($"{nameof(intervalInSeconds)} must be at least 1.");
+            if (intervalInMilliseconds < 100) throw new ArgumentException($"{nameof(intervalInMilliseconds)} must be at least 100 ms.");
             _aggregateFunction = aggregateFunction;
             _initialValue = initialValue;
             _resultToMessageMapping = resultToMessageMapping;
-            _intervalInSeconds = intervalInSeconds;
+            _intervalInMilliseconds = intervalInMilliseconds;
             _actualAccumulatedValue = _initialValue;
             Task.Factory.StartNew(async () =>
             {
                 while (true)
                 {
-                    await Task.Delay(_intervalInSeconds * 1000);
+                    await Task.Delay(_intervalInMilliseconds);
                     lock (_lock)
                     {
                         if (_messageInIntervalReceived)
