@@ -16,7 +16,7 @@ namespace Nuntius
         /// <summary>
         /// Indicates whether the messages should be send. Once it is false the messages stop being sent.
         /// </summary>
-        protected bool ShouldSendMessages;
+        protected bool ShouldSendMessages = true;
 
         /// <summary>
         /// Starts a task which periodically sends messages.
