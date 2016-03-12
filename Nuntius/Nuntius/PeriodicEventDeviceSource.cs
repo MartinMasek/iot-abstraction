@@ -33,7 +33,7 @@ namespace Nuntius
                     await Task.Delay(_intervalInMiliseconds);
                     lock (_shouldSendMessagesLock)
                     {
-                        SendMessage(GetNextMessage());
+                        if (_shouldSendMessages) SendMessage(GetNextMessage());
                     }
                 }
             });
