@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Nuntius.Tests.Privacy
 {
-    class DelayFilterTest
+    class DelayFilterTests
     {
         public class When_few_messages_are_sent
         {

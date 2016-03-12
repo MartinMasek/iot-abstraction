@@ -40,7 +40,7 @@ namespace Nuntius.Privacy
         /// Creates a new hash filter.
         /// </summary>
         /// <param name="hashType">Hash function to use.</param>
-        /// <param name="monitoringOption">How to behave when invoking <see cref="Send"/> callbacks.</param>
+        /// <param name="monitoringOption">How to behave when invoking <see cref="EventSourceBase.Send"/> callbacks.</param>
         /// <param name="keysToHash">Message keys whose values will be hashed and saved under the key.</param>
         public HashFilter(HashType hashType, EventSourceCallbackMonitoringOptions monitoringOption, params string[] keysToHash)
             : base(monitoringOption)

@@ -56,10 +56,12 @@
     <Compile Include="NuntiusConfiguration.cs" />
     <Compile Include="NuntiusMessage.cs" />
     <Compile Include="EventSourceBase.cs" />
+    <Compile Include="PeriodicEventDeviceSource.cs" />
     <Compile Include="Privacy\CountAnonymitySet.cs" />
     <Compile Include="Privacy\DelayFilter.cs" />
     <Compile Include="Privacy\HashFilter.cs" />
     <Compile Include="Privacy\IKAnonymitySet.cs" />
+    <Compile Include="Privacy\IntervalAggregateFilter.cs" />
     <Compile Include="Privacy\KAnonymityFilter.cs" />
     <Compile Include="Privacy\TrimMessageFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
