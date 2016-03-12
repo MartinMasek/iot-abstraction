@@ -13,6 +13,7 @@ namespace Nuntius.Privacy
     /// </summary>
     public class HashFilter : EventSourceBase, IEventPropagator
     {
+        private readonly Func<string> _salt;
         private readonly string[] _keysToHash;
         private readonly HashAlgorithm _hashProvider;
         private static uint[] _lookupByteToHexTable;
@@ -32,7 +33,18 @@ namespace Nuntius.Privacy
         /// </summary>
         /// <param name="hashType">Hash function to use.</param>
         /// <param name="keysToHash">Message keys whose values will be hashed and saved under the key.</param>
-        public HashFilter(HashType hashType, params string[] keysToHash) : this(hashType, EventSourceCallbackMonitoringOptions.NotCheckTaskException, keysToHash)
+        public HashFilter(HashType hashType, params string[] keysToHash) : this(hashType, null, EventSourceCallbackMonitoringOptions.NotCheckTaskException, keysToHash)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new hash filter which does not check for exceptions in tasks returned by <see cref="EventSourceBase.Send"/> callbacks.
+        /// </summary>
+        /// <param name="hashType">Hash function to use.</param>
+        /// <param name="salt">Salt used in hashing. It will be appended to the hashed value before hashing and 
+        /// hashed together.</param>
+        /// <param name="keysToHash">Message keys whose values will be hashed and saved under the key.</param>
+        public HashFilter(HashType hashType, Func<string> salt, params string[] keysToHash) : this(hashType, salt, EventSourceCallbackMonitoringOptions.NotCheckTaskException, keysToHash)
         {
         }
 
@@ -40,11 +52,14 @@ namespace Nuntius.Privacy
         /// Creates a new hash filter.
         /// </summary>
         /// <param name="hashType">Hash function to use.</param>
+        /// <param name="salt">Salt used in hashing. It will be appended to the hashed value before hashing and 
+        /// hashed together.</param>
         /// <param name="monitoringOption">How to behave when invoking <see cref="EventSourceBase.Send"/> callbacks.</param>
         /// <param name="keysToHash">Message keys whose values will be hashed and saved under the key.</param>
-        public HashFilter(HashType hashType, EventSourceCallbackMonitoringOptions monitoringOption, params string[] keysToHash)
+        public HashFilter(HashType hashType, Func<string> salt, EventSourceCallbackMonitoringOptions monitoringOption, params string[] keysToHash)
             : base(monitoringOption)
         {
+            _salt = salt;
             _keysToHash = keysToHash;
             switch (hashType)
             {
@@ -63,19 +78,19 @@ namespace Nuntius.Privacy
         /// <returns>Task which represents message processing.</returns>
         public Task ProcessMessage(NuntiusMessage message)
         {
-            // TODO move to task and create tests
-            foreach (var key in _keysToHash)
-            {
-                var value = message[key];
-                if (value == null)
-                {
-                    throw new KeyNotFoundException($"Key {key} was not present in the message.");
-                }
-                var hash = _hashProvider.ComputeHash(Encoding.UTF8.GetBytes(value));
-                message[key] = GetHexaString(hash);
-            }
             return Task.Factory.StartNew(() =>
             {
+                foreach (var key in _keysToHash)
+                {
+                    var value = message[key];
+                    if (value == null)
+                    {
+                        throw new KeyNotFoundException($"Key {key} was not present in the message.");
+                    }
+                    if (_salt != null) value += _salt();
+                    var hash = _hashProvider.ComputeHash(Encoding.UTF8.GetBytes(value));
+                    message[key] = GetHexaString(hash);
+                }
                 SafelyInvokeSendEvent(message);
             });
         }
