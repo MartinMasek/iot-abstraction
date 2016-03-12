@@ -10,27 +10,31 @@ namespace Nuntius
     /// Represents base implementation of <see cref="IDeviceSourceEndpoint"/> which periodically sends
     /// a message.
     /// </summary>
-    public class PeriodicEventDeviceSource : BaseDeviceSourceEndpoint
+    public abstract class PeriodicEventDeviceSource : BaseDeviceSourceEndpoint
     {
         private readonly int _intervalInMiliseconds;
 
         /// <summary>
-        /// Creates a new instance
+        /// Creates a new instance.
         /// </summary>
         /// <param name="intervalInMiliseconds">This is an interval in milliseconds before sending a message again. 
         /// It must be at least 10 ms.</param>
-        /// <param name="getMessage">Function that retrieves a message from this object.</param>
-        public PeriodicEventDeviceSource(int intervalInMiliseconds, Func<PeriodicEventDeviceSource, NuntiusMessage> getMessage)
+        protected PeriodicEventDeviceSource(int intervalInMiliseconds)
         {
             if (intervalInMiliseconds < 10)
                 throw new ArgumentException($"{nameof(intervalInMiliseconds)} must be greater or equal 10.");
-            if (getMessage == null) throw new ArgumentNullException($"{nameof(intervalInMiliseconds)} must not be null.");
             _intervalInMiliseconds = intervalInMiliseconds;
             Task.Factory.StartNew(async () =>
             {
                 await Task.Delay(_intervalInMiliseconds);
-                SendMessage(getMessage(this));
+                SendMessage(GetNextMessage());
             });
         }
+
+        /// <summary>
+        /// Function which is periodically called and its message is send.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract NuntiusMessage GetNextMessage();
     }
 }
