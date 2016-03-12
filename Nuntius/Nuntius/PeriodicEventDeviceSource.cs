@@ -13,6 +13,10 @@ namespace Nuntius
     public abstract class PeriodicEventDeviceSource : BaseDeviceSourceEndpoint
     {
         private readonly int _intervalInMiliseconds;
+        /// <summary>
+        /// Indicates whether the messages should be send. Once it is false the messages stop being sent.
+        /// </summary>
+        protected bool ShouldSendMessages;
 
         /// <summary>
         /// Starts a task which periodically sends messages.
@@ -48,9 +52,10 @@ namespace Nuntius
         /// <returns></returns>
         protected abstract NuntiusMessage GetNextMessage();
 
-        /// <summary>
-        /// Indicates whether the messages should be send. Once it is false the messages stop being sent.
-        /// </summary>
-        protected abstract bool ShouldSendMessages { get; }
+        public override void EndSending()
+        {
+            ShouldSendMessages = false;
+            base.EndSending();
+        }
     }
 }

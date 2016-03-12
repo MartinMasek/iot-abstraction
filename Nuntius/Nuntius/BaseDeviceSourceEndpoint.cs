@@ -5,12 +5,12 @@
     /// </summary>
     public class BaseDeviceSourceEndpoint : EventSourceBase, IDeviceSourceEndpoint
     {
-        public void SendMessage(NuntiusMessage message)
+        public virtual void SendMessage(NuntiusMessage message)
         {
             SafelyInvokeSendEvent(message);
         }
 
-        public void EndSending()
+        public virtual void EndSending()
         {
             SafelyInvokeEndEvent();
         }
