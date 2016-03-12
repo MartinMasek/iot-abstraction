@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -68,6 +69,7 @@ namespace Nuntius.Privacy
                         if (_messageInIntervalReceived)
                         {
                             var msg = _resultToMessageMapping(_actualAccumulatedValue);
+                            if (_sendTaskToken.IsCancellationRequested) break;
                             SafelyInvokeSendEvent(msg);
                             _messageInIntervalReceived = false;
                             _actualAccumulatedValue = _initialValue;
@@ -98,8 +100,20 @@ namespace Nuntius.Privacy
         /// </summary>
         public void EndProcessing()
         {
-            _sendTaskToken.Cancel();
-            SafelyInvokeEndEvent();
+            Task.Factory.StartNew(() =>
+            {
+                lock (_lock)
+                {
+                    _sendTaskToken.Cancel();
+                }
+                SafelyInvokeEndEvent();
+            }).ContinueWith(t =>
+            {
+                var nuntiusException = new NuntiusCommunicationException(null, this,
+                    CommunicationExceptionOrigin.EndHandler,
+                    new ReadOnlyCollection<Exception>(new List<Exception>() { t.Exception }));
+                NuntiusConfiguration.DistributeException(nuntiusException);
+            }, TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously);
         }
     }
 }
