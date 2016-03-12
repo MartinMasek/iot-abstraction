@@ -37,7 +37,7 @@ namespace Nuntius.Logging
                 Directory.CreateDirectory(Path.GetDirectoryName(filePath));
             _writer = new StreamWriter(filePath, append);
             _messageToString = message =>
-                    $"{DateTime.Now.ToString("HH:mm:ss")}{Environment.NewLine}Message: {message}{Environment.NewLine}";
+                    $"{DateTime.Now.ToString("HH:mm:ss.f")}{Environment.NewLine}Message: {message}{Environment.NewLine}";
         }
 
         /// <summary>

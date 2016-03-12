@@ -15,7 +15,7 @@ namespace Playground
         static void Main(string[] args)
         {
             var d = new BaseDeviceSourceEndpoint();
-            d.LinkTo(new TrimMessageFilter("Trim")).LogToFile(@".\Foo\Log_2.txt", true);
+            d.LinkTo(new TrimMessageFilter("Trim")).LogToFile(@"C:\Users\ape1eat\Desktop\Foo\Log_2.txt", true);
             d.SendMessage(new NuntiusMessage()
             {
                 Properties =
