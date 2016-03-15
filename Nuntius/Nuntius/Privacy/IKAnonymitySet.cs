@@ -8,23 +8,24 @@ namespace Nuntius.Privacy
 {
     /// <summary>
     /// Represents an interface used in k-anonymity algorithm. Instance of a class implementing
-    /// this interface is offered an element and should decide whether there is enough number of elements
-    /// (at least K in total).
+    /// this interface is offered an element and it should decide whether there is enough number of elements
+    /// (at least K in total) and output a message appropriately.
     /// </summary>
-    /// <typeparam name="TElement"></typeparam>
-    public interface IKAnonymitySet<TElement>
+    public interface IKAnonymitySet
     {
         /// <summary>
-        /// Id of the set.
+        /// Id of the set. This is used by the k-anonymity algorithm to decide what set to offer
+        /// a new message.
         /// </summary>
         int Id { get; }
 
         /// <summary>
-        /// Adds a new element to the set. Returns true if there are at least K elements
-        /// in the set (including the added one). This method must be thread safe.
+        /// Offers the message to the set which should behave appropriately. If the set if not in k-anonymity
+        /// state with the offered message, it should return null; otherwise appropriate output message should
+        /// be returned. This method is called from multiple threads.
         /// </summary>
-        /// <param name="element">Element to add.</param>
-        /// <returns>True if there are at least K elements in the set (including the added one).</returns>
-        bool AddToSet(TElement element);
+        /// <param name="inputMessage">Message offered to the set.</param>
+        /// <returns></returns>
+        NuntiusMessage OfferMessage(NuntiusMessage inputMessage);
     }
 }

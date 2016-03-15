@@ -56,6 +56,7 @@
     <Compile Include="Privacy\DelayFilterTests.cs" />
     <Compile Include="Privacy\HashFilterTests.cs" />
     <Compile Include="Privacy\IntervalAggregateFilterTests.cs" />
+    <Compile Include="Privacy\LastFilterTests.cs" />
     <Compile Include="Privacy\TrimMessageFilterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

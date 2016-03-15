@@ -8,57 +8,65 @@ using System.Threading.Tasks;
 namespace Nuntius.Privacy
 {
     /// <summary>
-    /// This set doesn't track elements. Instead it has a counter representing occurrences of elements. Each element
-    /// is assigned a lifespan and one the lifespan ends it is removed from the set. So for example say lifespan is 
-    /// 1000 ms and element is added at 100th, 200th and 500th. After an element is added at 1201th millisecond number
-    /// of elements in the set is 2.
+    /// This set has a counter representing messages offered. Each time a message is offered, the counter is incremented
+    /// and a task, which decrements the counter after a period, is queued. So for example say the period is 1000 ms
+    /// and a message is offered at 100th, 200th and 500th ms. After a message is added at 1201th millisecond, 
+    /// the counter is 2.
     /// </summary>
-    public class CountAnonymitySet : IKAnonymitySet<object>
+    public class CountAnonymitySet : IKAnonymitySet
     {
         private readonly int _k;
         private readonly int _lifespanInMilliseconds;
+        private readonly Func<int, NuntiusMessage> _countToMessage;
         private int _occurences;
 
         /// <summary>
         /// Creates a new instance.
         /// </summary>
         /// <param name="setId">Set id.</param>
-        /// <param name="k">A threshold. If number of elements after adding is greater or equal k true is returned.</param>
-        /// <param name="lifespanInMilliseconds">Lifespan of an element. After this lifespan element is removed from the set. This should be
-        /// optimally larger then time between <see cref="AddToSet"/> calls so this class doesn't throttle.</param>
-        public CountAnonymitySet(int setId, int k, int lifespanInMilliseconds)
+        /// <param name="k">A threshold. If the number of messages after adding is greater or equal k, 
+        /// <see cref="countToMessage"/> is called.</param>
+        /// <param name="lifespanInMilliseconds">Lifespan of an element. After this lifespan the counter is decreased
+        /// This should be optimally larger then time between <see cref="OfferMessage"/> calls so this class
+        /// doesn't throttle.</param>
+        /// <param name="countToMessage">This is a mapping function called once the counter is at least k.</param>
+        public CountAnonymitySet(int setId, int k, int lifespanInMilliseconds, Func<int, NuntiusMessage> countToMessage)
         {
             if (k < 1) throw new ArgumentException($"{nameof(k)} must be positive.");
             if (lifespanInMilliseconds < 1) throw new ArgumentException($"{nameof(lifespanInMilliseconds)} must be positive.");
+            if (countToMessage == null) throw new ArgumentNullException($"{nameof(countToMessage)} must not be null.");
 
             Id = setId;
             _k = k;
             _lifespanInMilliseconds = lifespanInMilliseconds;
+            _countToMessage = countToMessage;
         }
 
-        /// <summary>
-        /// Id of the set.
-        /// </summary>
         public int Id { get; }
 
         /// <summary>
-        /// Adds a new element to the set. Returns true if there are at least K elements
-        /// in the set (including the added one). This method must be thread safe.
+        /// Number of messages which arrived from this point to the past and are maximum
+        /// <see cref="_lifespanInMilliseconds"/> old.
         /// </summary>
-        /// <param name="element">Element to add. Doesn't matter what is the element because the element is never used
-        /// nor accessed. Therefore it should be called with null parameter.</param>
-        /// <returns>True if there are at least K elements in the set (including the added one).</returns>
-        public bool AddToSet(object element)
+        public int Count => _occurences;
+
+        /// <summary>
+        /// Offers the message to the set which should behave appropriately. If the set if not in k-anonymity
+        /// state with the offered message, it should return null; otherwise appropriate output message should
+        /// be returned. This method is called from multiple threads.
+        /// </summary>
+        /// <param name="inputMessage">Message offered to the set.</param>
+        /// <returns></returns>
+        public NuntiusMessage OfferMessage(NuntiusMessage inputMessage)
         {
             var occurences = Interlocked.Add(ref _occurences, 1);
-            Console.WriteLine($"{Id} - {occurences}");
+            if (occurences >= _k) return _countToMessage(occurences);
+
             Task.Factory.StartNew(async () =>
             {
                 await Task.Delay(_lifespanInMilliseconds);
                 Interlocked.Add(ref _occurences, -1);
-                Console.WriteLine($"deleted from {Id}");
             });
-            return occurences >= _k;
-        }
+            return null;
     }
 }

@@ -63,6 +63,7 @@
     <Compile Include="Privacy\IKAnonymitySet.cs" />
     <Compile Include="Privacy\IntervalAggregateFilter.cs" />
     <Compile Include="Privacy\KAnonymityFilter.cs" />
+    <Compile Include="Privacy\LastFilter.cs" />
     <Compile Include="Privacy\TrimMessageFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

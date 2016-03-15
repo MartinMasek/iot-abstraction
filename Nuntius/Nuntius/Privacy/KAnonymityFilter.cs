@@ -7,25 +7,34 @@ using System.Threading.Tasks;
 namespace Nuntius.Privacy
 {
     /// <summary>
-    /// Represents a filter which distributes incoming messages to sets. If the set with included
-    /// message contains at least K elements, propagates the message further.
+    /// Represents a filter which distributes incoming messages to sets. The decides what to do 
+    /// with the message and outputs a result.
     /// </summary>
-    public class KAnonymityFilter<TElement> : EventSourceBase, IEventPropagator
+    public class KAnonymityFilter : EventSourceBase, IEventPropagator
     {
-        private readonly Dictionary<int, IKAnonymitySet<TElement>> _sets = new Dictionary<int, IKAnonymitySet<TElement>>();
-        private readonly Func<NuntiusMessage, TElement> _mapMessageToElement;
-        private readonly Func<TElement, int> _chooseSet;
+        private readonly Dictionary<int, IKAnonymitySet> _sets = new Dictionary<int, IKAnonymitySet>();
+        private readonly Func<NuntiusMessage, int> _chooseSet;
+
+        /// <summary>
+        /// Creates a new instance which does not check its listeners task exceptions.
+        /// </summary>
+        /// <param name="sets">Sets used by k-set algorithm.</param>
+        /// <param name="chooseSet">This function have to choose a proper set from the sets
+        /// based on passed <see cref="NuntiusMessage"/>.</param>
+        public KAnonymityFilter(IKAnonymitySet[] sets, Func<NuntiusMessage, int> chooseSet)
+            : this(sets, chooseSet, EventSourceCallbackMonitoringOptions.NotCheckTaskException)
+        { }
 
         /// <summary>
         /// Creates a new instance.
         /// </summary>
         /// <param name="sets">Sets used by k-set algorithm.</param>
-        /// <param name="mapMessageToElement">Mapping function from <see cref="NuntiusMessage"/> to <see cref="TElement"/>.
-        /// Returned element will be inserted to the set.</param>
         /// <param name="chooseSet">This function have to choose a proper set from the sets
-        /// based on passed <see cref="TElement"/>.</param>
-        public KAnonymityFilter(IKAnonymitySet<TElement>[] sets, Func<NuntiusMessage, TElement> mapMessageToElement,
-            Func<TElement, int> chooseSet)
+        /// based on passed <see cref="NuntiusMessage"/>.</param>
+        /// <param name="options">Configuration regarding checking of tasks returned by <see cref="EventSourceBase.Send"/> event
+        /// handlers.</param>
+        public KAnonymityFilter(IKAnonymitySet[] sets, Func<NuntiusMessage, int> chooseSet,
+            EventSourceCallbackMonitoringOptions options) : base(options)
         {
             if (sets == null || sets.Length == 0) throw new ArgumentException($"Parameter {nameof(sets)} must be array of length at least 1.");
             foreach (var set in sets)
@@ -34,10 +43,8 @@ namespace Nuntius.Privacy
                 if (_sets.ContainsKey(set.Id)) throw new ArgumentException($"There was a set with the same id {set.Id} as a different set.");
                 _sets.Add(set.Id, set);
             }
-            if (mapMessageToElement == null) throw new ArgumentNullException($"{nameof(mapMessageToElement)} function was null.");
-            if (mapMessageToElement == null) throw new ArgumentNullException($"{nameof(chooseSet)} function was null.");
 
-            _mapMessageToElement = mapMessageToElement;
+            if (chooseSet == null) throw new ArgumentNullException($"{nameof(chooseSet)} function was null.");
             _chooseSet = chooseSet;
         }
 
@@ -50,16 +57,17 @@ namespace Nuntius.Privacy
         {
             return Task.Factory.StartNew(() =>
             {
-                var element = _mapMessageToElement(message);
-                var setId = _chooseSet(element);
-                IKAnonymitySet<TElement> set;
+                var setId = _chooseSet(message);
+                IKAnonymitySet set;
                 if (!_sets.TryGetValue(setId, out set))
                 {
                     throw new KeyNotFoundException(
                         $"Element for message {message} returned set id {setId} which was not present between sets.");
                 }
-                if (set.AddToSet(element)) SafelyInvokeSendEvent(message);
+                var result = set.OfferMessage(message);
+                if (result != null) SafelyInvokeSendEvent(result);
             });
+
         }
 
         /// <summary>

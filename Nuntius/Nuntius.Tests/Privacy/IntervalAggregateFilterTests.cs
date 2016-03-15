@@ -20,7 +20,7 @@ namespace Nuntius.Tests.Privacy
 
                 var filter = new IntervalAggregateFilter<int>(
                     (m, acu) => int.Parse(m["number"]) + acu,
-                    0, acu => new NuntiusMessage() { Properties = { { "number", acu.ToString() } } }, 1);
+                    0, acu => new NuntiusMessage() { Properties = { { "number", acu.ToString() } } }, 1000);
                 filter.Send += m =>
                 {
                     results.Add(m["number"]);
