@@ -6,13 +6,30 @@ using System.Threading.Tasks;
 
 namespace Nuntius.Logging
 {
-    #region IEventPropagator extensions
 
     /// <summary>
     /// This class provides extensions used for logging.
     /// </summary>
     public static class LoggingExtensions
     {
+        #region IEventPropagator extensions
+
+        /// <summary>
+        /// Logs a message using a given logging function.
+        /// </summary>
+        /// <param name="source">Source generating messages.</param>
+        /// <param name="log">Log action used to log messages.</param>
+        /// <returns>The original source which generates message.</returns>
+        public static IEventPropagator Log(this IEventPropagator source, Action<NuntiusMessage> log)
+        {
+            source.Send += message =>
+            {
+                log(message);
+                return Task.FromResult<object>(null);
+            };
+            return source;
+        }
+
         /// <summary>
         /// Logs a message using a given <see cref="ILogger"/>.
         /// </summary>
@@ -76,6 +93,22 @@ namespace Nuntius.Logging
         #endregion
 
         #region IEventSourceExtensions
+
+        /// <summary>
+        /// Logs a message using a given logging function.
+        /// </summary>
+        /// <param name="source">Source generating messages.</param>
+        /// <param name="log">Log action used to log messages.</param>
+        /// <returns>The original source which generates message.</returns>
+        public static IEventSource Log(this IEventSource source, Action<NuntiusMessage> log)
+        {
+            source.Send += message =>
+            {
+                log(message);
+                return Task.FromResult<object>(null);
+            };
+            return source;
+        }
 
         /// <summary>
         /// Logs a message using a given <see cref="ILogger"/>.
