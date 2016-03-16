@@ -17,7 +17,7 @@ namespace Nuntius.Privacy
     {
         private readonly int _k;
         private readonly int _lifespanInMilliseconds;
-        private readonly Func<int, NuntiusMessage> _countToMessage;
+        private readonly Func<CountAnonymitySet, NuntiusMessage> _setToMessage;
         private int _occurences;
 
         /// <summary>
@@ -25,22 +25,22 @@ namespace Nuntius.Privacy
         /// </summary>
         /// <param name="setId">Set id.</param>
         /// <param name="k">A threshold. If the number of messages after adding is greater or equal k, 
-        /// <see cref="countToMessage"/> is called.</param>
+        /// <see cref="setToMessage"/> is called.</param>
         /// <param name="lifespanInMilliseconds">Lifespan of an element. After this lifespan the counter is decreased
         /// This should be optimally larger then time between <see cref="OfferMessage"/> calls so this class
         /// doesn't throttle.</param>
-        /// <param name="countToMessage">This is a mapping function called once the counter is at least k.</param>
-        public CountAnonymitySet(int setId, int k, int lifespanInMilliseconds, Func<int, NuntiusMessage> countToMessage)
+        /// <param name="setToMessage">This is a mapping function called once the counter is at least k.</param>
+        public CountAnonymitySet(int setId, int k, int lifespanInMilliseconds, Func<CountAnonymitySet, NuntiusMessage> setToMessage)
         {
             if (k < 1) throw new ArgumentException($"{nameof(k)} must be positive.");
             if (lifespanInMilliseconds < 1)
                 throw new ArgumentException($"{nameof(lifespanInMilliseconds)} must be positive.");
-            if (countToMessage == null) throw new ArgumentNullException($"{nameof(countToMessage)} must not be null.");
+            if (setToMessage == null) throw new ArgumentNullException($"{nameof(setToMessage)} must not be null.");
 
             Id = setId;
             _k = k;
             _lifespanInMilliseconds = lifespanInMilliseconds;
-            _countToMessage = countToMessage;
+            _setToMessage = setToMessage;
         }
 
         public int Id { get; }
@@ -66,7 +66,7 @@ namespace Nuntius.Privacy
                 await Task.Delay(_lifespanInMilliseconds);
                 Interlocked.Add(ref _occurences, -1);
             });
-            if (occurences >= _k) return _countToMessage(occurences);
+            if (occurences >= _k) return _setToMessage(this);
             return null;
         }
     }
