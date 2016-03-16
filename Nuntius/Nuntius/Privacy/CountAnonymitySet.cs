@@ -33,7 +33,8 @@ namespace Nuntius.Privacy
         public CountAnonymitySet(int setId, int k, int lifespanInMilliseconds, Func<int, NuntiusMessage> countToMessage)
         {
             if (k < 1) throw new ArgumentException($"{nameof(k)} must be positive.");
-            if (lifespanInMilliseconds < 1) throw new ArgumentException($"{nameof(lifespanInMilliseconds)} must be positive.");
+            if (lifespanInMilliseconds < 1)
+                throw new ArgumentException($"{nameof(lifespanInMilliseconds)} must be positive.");
             if (countToMessage == null) throw new ArgumentNullException($"{nameof(countToMessage)} must not be null.");
 
             Id = setId;
@@ -60,13 +61,13 @@ namespace Nuntius.Privacy
         public NuntiusMessage OfferMessage(NuntiusMessage inputMessage)
         {
             var occurences = Interlocked.Add(ref _occurences, 1);
-            if (occurences >= _k) return _countToMessage(occurences);
-
             Task.Factory.StartNew(async () =>
             {
                 await Task.Delay(_lifespanInMilliseconds);
                 Interlocked.Add(ref _occurences, -1);
             });
+            if (occurences >= _k) return _countToMessage(occurences);
             return null;
+        }
     }
 }

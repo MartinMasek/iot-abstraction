@@ -16,18 +16,21 @@ namespace Nuntius.Tests.Privacy
             public class And_number_of_elements_is_larger_than_k
             {
                 [Test]
-                public void Then_true_is_returned()
+                public void Then_message_is_returned()
                 {
-                    var set = new CountAnonymitySet(1, 4, 100);
-                    Assert.IsFalse(set.AddToSet(null));
+                    var set = new CountAnonymitySet(1, 4, 100, x => new NuntiusMessage()
+                    {
+                        Properties = { { "k", x.ToString() } }
+                    });
+                    Assert.AreEqual(null, set.OfferMessage(null));
                     Task.Delay(10).Wait();
-                    Assert.IsFalse(set.AddToSet(null));
+                    Assert.AreEqual(null, set.OfferMessage(null));
                     Task.Delay(10).Wait();
-                    Assert.IsFalse(set.AddToSet(null));
+                    Assert.AreEqual(null, set.OfferMessage(null));
                     Task.Delay(10).Wait();
-                    Assert.IsTrue(set.AddToSet(null));
+                    Assert.AreEqual("4", set.OfferMessage(null).Properties["k"]);
                     Task.Delay(10).Wait();
-                    Assert.IsTrue(set.AddToSet(null));
+                    Assert.AreEqual("5", set.OfferMessage(null).Properties["k"]);
                 }
             }
         }
@@ -38,22 +41,25 @@ namespace Nuntius.Tests.Privacy
             public class And_number_of_elements_is_lesser_than_k
             {
                 [Test]
-                public void Then_false_is_returned()
+                public void Then_null_is_returned()
                 {
-                    var set = new CountAnonymitySet(1, 4, 100);
-                    Assert.IsFalse(set.AddToSet(null));
+                    var set = new CountAnonymitySet(1, 4, 100, x => new NuntiusMessage()
+                    {
+                        Properties = { { "k", x.ToString() } }
+                    });
+                    Assert.AreEqual(null, set.OfferMessage(null));
                     Task.Delay(20).Wait();
-                    Assert.IsFalse(set.AddToSet(null));
+                    Assert.AreEqual(null, set.OfferMessage(null));
                     Task.Delay(20).Wait();
-                    Assert.IsFalse(set.AddToSet(null));
-                    Task.Delay(20).Wait();
-                    Assert.IsTrue(set.AddToSet(null));
-                    Task.Delay(20).Wait();
-                    Assert.IsTrue(set.AddToSet(null));
-                    Task.Delay(20).Wait();
-                    Assert.IsTrue(set.AddToSet(null));
+                    Assert.AreEqual(null, set.OfferMessage(null));
+                    Task.Delay(10).Wait();
+                    Assert.AreEqual("4", set.OfferMessage(null)["k"]);
+                    Task.Delay(10).Wait();
+                    Assert.AreEqual("5", set.OfferMessage(null)["k"]);
+                    Task.Delay(45).Wait();
+                    Assert.AreEqual("4", set.OfferMessage(null)["k"]);
                     Task.Delay(50).Wait();
-                    Assert.IsFalse(set.AddToSet(null));
+                    Assert.AreEqual(null, set.OfferMessage(null));
                 }
             }
         }
