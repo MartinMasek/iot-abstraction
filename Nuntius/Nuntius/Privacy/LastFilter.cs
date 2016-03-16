@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -16,6 +17,7 @@ namespace Nuntius.Privacy
         private NuntiusMessage _lastMessage;
         private Task _taskWhichSendsMessage;
         private object _lock = new object();
+        private bool _endInvoked;
 
         /// <summary>
         /// Constructs a new instance which does not check task exceptions.
@@ -58,8 +60,8 @@ namespace Nuntius.Privacy
                             lock (_lock)
                             {
                                 // Save pointer because send is async so the receiver could get null.
-                                var msg = _lastMessage;   
-                                SafelyInvokeSendEvent(msg);
+                                var msg = _lastMessage;
+                                if (!_endInvoked) SafelyInvokeSendEvent(msg);
                                 _lastMessage = null;
                                 _taskWhichSendsMessage = null;
                             }
@@ -74,7 +76,20 @@ namespace Nuntius.Privacy
         /// </summary>
         public void EndProcessing()
         {
-            SafelyInvokeEndEvent();
+            Task.Factory.StartNew(() =>
+            {
+                lock (_lock)
+                {
+                    _endInvoked = true;
+                }
+                SafelyInvokeEndEvent();
+            }).ContinueWith(t =>
+            {
+                var nuntiusException = new NuntiusCommunicationException(null, this,
+                    CommunicationExceptionOrigin.EndHandler,
+                    new ReadOnlyCollection<Exception>(new List<Exception>() { t.Exception }));
+                NuntiusConfiguration.DistributeException(nuntiusException);
+            }, TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously);
         }
     }
 }
