@@ -11,7 +11,7 @@ namespace Nuntius.Privacy
     /// This set has a counter representing messages offered. Each time a message is offered, the counter is incremented
     /// and a task, which decrements the counter after a period, is queued. So for example say the period is 1000 ms
     /// and a message is offered at 100th, 200th and 500th ms. After a message is added at 1201th millisecond, 
-    /// the counter is 2.
+    /// the counter is 2. The <see cref="OfferMessage"/> method can be overridden.
     /// </summary>
     public class CountAnonymitySet : IKAnonymitySet
     {
@@ -58,7 +58,7 @@ namespace Nuntius.Privacy
         /// </summary>
         /// <param name="inputMessage">Message offered to the set.</param>
         /// <returns></returns>
-        public NuntiusMessage OfferMessage(NuntiusMessage inputMessage)
+        public virtual NuntiusMessage OfferMessage(NuntiusMessage inputMessage)
         {
             var occurences = Interlocked.Add(ref _occurences, 1);
             Task.Factory.StartNew(async () =>
