@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Nuntius.Privacy
 {
     /// <summary>
-    /// Represents a filter which distributes incoming messages to sets. The decides what to do 
+    /// Represents a filter which distributes incoming messages to sets. The set decides what to do 
     /// with the message and outputs a result.
     /// </summary>
     public class KAnonymityFilter : EventSourceBase, IEventPropagator
