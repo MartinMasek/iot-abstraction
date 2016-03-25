@@ -11,6 +11,9 @@ namespace Nuntius
     /// </summary>
     public class EventSourceBase : IEventSource
     {
+        /// <summary>
+        /// Monitoring options used.
+        /// </summary>
         protected readonly EventSourceCallbackMonitoringOptions MonitoringOption;
 
         /// <summary>

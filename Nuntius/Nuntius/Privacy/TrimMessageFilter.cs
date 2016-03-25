@@ -15,8 +15,9 @@ namespace Nuntius.Privacy
         private readonly bool _checkKeyPressenceInMessage;
 
         /// <summary>
-        /// Creates a new trim message filter which does not check for exceptions in tasks returned by <see cref="Send"/> callbacks and
-        /// does not check whether message contains all keys which should be deleted.
+        /// Creates a new trim message filter which does not check for exceptions in tasks returned by 
+        /// <see cref="EventSourceBase.Send"/> callbacks and does not check whether message contains all
+        /// keys which should be deleted.
         /// </summary>
         /// <param name="keysToDelete">Keys to delete from the message.</param>
         public TrimMessageFilter(params string[] keysToDelete) : this(false, keysToDelete)
@@ -24,7 +25,8 @@ namespace Nuntius.Privacy
         }
 
         /// <summary>
-        /// Creates a new trim message filter which does not check for exceptions in tasks returned by <see cref="Send"/> callbacks.
+        /// Creates a new trim message filter which does not check for exceptions in tasks returned by 
+        /// <see cref="EventSourceBase.Send"/> callbacks.
         /// </summary>
         /// <param name="checkKeyPressenceInMessage">If set to true throws <see cref="KeyNotFoundException"/> when deleted key
         /// is not in the message.</param>
@@ -39,7 +41,7 @@ namespace Nuntius.Privacy
         /// </summary>
         /// <param name="checkKeyPressenceInMessage">If set to true throws <see cref="KeyNotFoundException"/> when deleted key
         /// is not in the message.</param>
-        /// <param name="monitoringOption">How to behave when invoking <see cref="Send"/> callbacks.</param>
+        /// <param name="monitoringOption">How to behave when invoking <see cref="EventSourceBase.Send"/> callbacks.</param>
         /// <param name="keysToDelete">Keys to delete from the message.</param>
         public TrimMessageFilter(bool checkKeyPressenceInMessage, EventSourceCallbackMonitoringOptions monitoringOption, params string[] keysToDelete)
             : base(monitoringOption)

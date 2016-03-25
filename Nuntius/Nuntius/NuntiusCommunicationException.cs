@@ -13,10 +13,24 @@ namespace Nuntius
     /// </summary>
     public class NuntiusCommunicationException : Exception
     {
+        /// <summary>
+        /// Creates a new instance of communication exception.
+        /// </summary>
         public NuntiusCommunicationException() { }
 
+        /// <summary>
+        /// Creates a new instance of communication exception.
+        /// </summary>
+        /// <param name="message"></param>
         public NuntiusCommunicationException(string message) : base(message) { }
 
+        /// <summary>
+        /// Creates a new instance of communication exception.
+        /// </summary>
+        /// <param name="messageCausingException"></param>
+        /// <param name="exceptionCatcher"></param>
+        /// <param name="origin"></param>
+        /// <param name="innerExceptions"></param>
         public NuntiusCommunicationException(NuntiusMessage messageCausingException,
             IEventSource exceptionCatcher,
             CommunicationExceptionOrigin origin,
@@ -29,7 +43,7 @@ namespace Nuntius
         }
 
         /// <summary>
-        /// Holds message after which the exception occured. Can be null (for example in a case when
+        /// Holds message after which the exception occurred. Can be null (for example in a case when
         /// exception was caused during <see cref="IEventSource.End"/> event.
         /// </summary>
         public NuntiusMessage MessageCausingException { get; private set; }

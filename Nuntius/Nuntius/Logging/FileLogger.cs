@@ -52,6 +52,10 @@ namespace Nuntius.Logging
             _messageToString = messageToString;
         }
 
+        /// <summary>
+        /// Logs a message.
+        /// </summary>
+        /// <param name="message">Message to log.</param>
         public void Log(NuntiusMessage message)
         {
             _writer.WriteLine(_messageToString(message));
