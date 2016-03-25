@@ -30,7 +30,15 @@ namespace Nuntius
             MonitoringOption = monitoringOption;
         }
 
+        /// <summary>
+        /// Fired when a new message is sent.
+        /// </summary>
         public event Func<NuntiusMessage, Task> Send;
+
+        /// <summary>
+        /// Fired when the event source signalizes it will not send any more messages. Handlers of this event should be
+        /// short and simple. Any non trivial action should be executed as an asynchronous operation.
+        /// </summary>
         public event Action End;
 
         /// <summary>

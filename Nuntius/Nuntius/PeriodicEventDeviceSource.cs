@@ -57,6 +57,9 @@ namespace Nuntius
         /// <returns></returns>
         protected abstract NuntiusMessage GetNextMessage();
 
+        /// <summary>
+        /// Signalizes no more messages are going to be sent.
+        /// </summary>
         public override void EndSending()
         {
             lock (_shouldSendMessagesLock)

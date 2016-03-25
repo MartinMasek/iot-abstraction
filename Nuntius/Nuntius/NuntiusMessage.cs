@@ -11,6 +11,10 @@ namespace Nuntius
     {
         private readonly Dictionary<string, string> _properties = new Dictionary<string, string>();
 
+        /// <summary>
+        /// Returns a property for a given key.
+        /// </summary>
+        /// <param name="key">Key for which to return the value.</param>
         public string this[string key]
         {
             get { return GetProperty(key); }
@@ -86,6 +90,13 @@ namespace Nuntius
             return clone;
         }
 
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        /// <filterpriority>2</filterpriority>
         public override string ToString()
         {
             var builder = new StringBuilder();
